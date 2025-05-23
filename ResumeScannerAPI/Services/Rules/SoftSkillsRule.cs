@@ -22,7 +22,7 @@ namespace ResumeScannerAPI.Services.Rules
             return new ScoringResult
             {
                 RuleName = RuleName,
-                Score = found.Count * 5,
+                Score = found.Count * 10,
                 Matches = found
             };
         }
