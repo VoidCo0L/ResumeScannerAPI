@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ResumeScannerAPI.Models;
 using ResumeScannerAPI.Services;
+using System.Text;
+using UglyToad.PdfPig;
 
 namespace ResumeScannerAPI.Controllers
 {
@@ -21,8 +22,31 @@ namespace ResumeScannerAPI.Controllers
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded.");
 
-            using var reader = new StreamReader(file.OpenReadStream());
-            var content = await reader.ReadToEndAsync();
+            string content = string.Empty;
+            var extension = Path.GetExtension(file.FileName).ToLower();
+
+            if (extension == ".txt")
+            {
+                using var reader = new StreamReader(file.OpenReadStream());
+                content = await reader.ReadToEndAsync();
+            }
+            else if (extension == ".pdf")
+            {
+                using var pdfStream = file.OpenReadStream();
+                using var pdfDocument = PdfDocument.Open(pdfStream);
+
+                var text = new StringBuilder();
+                foreach (var page in pdfDocument.GetPages())
+                {
+                    text.AppendLine(page.Text);
+                }
+
+                content = text.ToString();
+            }
+            else
+            {
+                return BadRequest("Unsupported file type. Only .txt and .pdf are allowed.");
+            }
 
             var results = _ruleEngine.Evaluate(content);
 
@@ -32,6 +56,5 @@ namespace ResumeScannerAPI.Controllers
                 Results = results
             });
         }
-
     }
 }
