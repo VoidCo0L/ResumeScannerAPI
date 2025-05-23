@@ -14,12 +14,14 @@ builder.Services.AddSingleton(provider =>
 {
     var rules = new List<IScoringRule>
     {
-        new KeywordMatchRule(new List<string>{"C#", "ASP.NET", "React", "SQL"})
-        // Add ExperienceRule and TechStackRule here later
+        new KeywordMatchRule(new List<string>{"C#", "ASP.NET", "React", "SQL"}),
+        new ExperienceRule(),
+        new TechStackRule(new List<string>{"JavaScript", "Docker", "Kubernetes", "Azure", "Entity Framework"})
     };
 
     return new RuleEngineService(rules);
 });
+
 
 var app = builder.Build();
 
