@@ -1,4 +1,4 @@
-# 📄 ResumeScannerAPI — Bilingual (English & German) CV Scoring API
+# 📄ResumeScannerAPI-Bilingual (English & German) CV Scoring API
 A C# ASP.NET Core 8 Web API for scanning resumes (PDF or TXT) and evaluating them based on customizable rule-based scoring.
 
 ## ✨ Features
