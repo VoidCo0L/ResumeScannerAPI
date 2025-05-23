@@ -1,30 +1,31 @@
-﻿using System.Text.RegularExpressions;
+﻿using ResumeScannerAPI.Models;
 
 namespace ResumeScannerAPI.Services.Rules
 {
     // checks the presence of technologies from a list
     public class TechStackRule : IScoringRule
     {
-        private readonly List<string> _techStack;
+        private readonly List<string> _technologies;
 
-        public string RuleName => "Tech Stack Match Rule";
-
-        public TechStackRule(List<string> techStack)
+        public TechStackRule(List<string> technologies)
         {
-            _techStack = techStack;
+            _technologies = technologies;
         }
 
-        public int CalculateScore(string content)
+        public string RuleName => nameof(TechStackRule);
+
+        public ScoringResult Evaluate(string content)
         {
-            int score = 0;
-            foreach (var tech in _techStack)
+            var found = _technologies
+                .Where(t => content.Contains(t, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            return new ScoringResult
             {
-                if (Regex.IsMatch(content, $@"\b{tech}\b", RegexOptions.IgnoreCase))
-                {
-                    score += 8;
-                }
-            }
-            return score;
+                RuleName = RuleName,
+                Score = found.Count * 7,
+                Matches = found
+            };
         }
     }
 }

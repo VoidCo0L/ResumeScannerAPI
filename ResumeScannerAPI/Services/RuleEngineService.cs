@@ -1,4 +1,5 @@
-﻿using ResumeScannerAPI.Services.Rules;
+﻿using ResumeScannerAPI.Models;
+using ResumeScannerAPI.Services.Rules;
 
 namespace ResumeScannerAPI.Services
 {
@@ -11,13 +12,14 @@ namespace ResumeScannerAPI.Services
             _rules = rules;
         }
 
-        public Dictionary<string, int> Evaluate(string content)
+        public List<ScoringResult> Evaluate(string content)
         {
-            var results = new Dictionary<string, int>();
+            var results = new List<ScoringResult>();
 
             foreach (var rule in _rules)
             {
-                results.Add(rule.RuleName, rule.CalculateScore(content));
+                var result = rule.Evaluate(content);
+                results.Add(result);
             }
 
             return results;

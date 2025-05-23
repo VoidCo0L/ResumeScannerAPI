@@ -53,8 +53,17 @@ namespace ResumeScannerAPI.Controllers
             return Ok(new
             {
                 FileName = file.FileName,
-                Results = results
+                Results = results,
+                EvaluatedAgainst = new
+                {
+                    Keywords = new List<string> { "C#", "ASP.NET", "React", "SQL", "Microservices", "Blazor", "REST API", "Unit Testing" },
+                    TechStack = new List<string> { "JavaScript", "Docker", "Kubernetes", "Azure", "Entity Framework", "RabbitMQ", "GraphQL", "TypeScript" },
+                    Degrees = new List<string> { "Computer Science", "Software Engineering", "IT" },
+                    SoftSkills = new List<string> { "Team player", "Agile", "Problem-solving", "Communication" },
+                    Certifications = new List<string> { "Azure Fundamentals", "AWS Certified", "Scrum Master", "MCSD" }
+                }
             });
+
         }
     }
 }

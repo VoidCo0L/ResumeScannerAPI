@@ -1,8 +1,10 @@
-﻿namespace ResumeScannerAPI.Services.Rules
+﻿using ResumeScannerAPI.Models;
+
+namespace ResumeScannerAPI.Services.Rules
 {
     public interface IScoringRule
     {
-        int CalculateScore(string content);
+        ScoringResult Evaluate(string content);
         string RuleName { get; }
     }
 }

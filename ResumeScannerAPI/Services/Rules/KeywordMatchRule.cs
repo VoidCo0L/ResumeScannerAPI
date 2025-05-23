@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+﻿using ResumeScannerAPI.Models;
 
 namespace ResumeScannerAPI.Services.Rules
 {
@@ -6,24 +6,25 @@ namespace ResumeScannerAPI.Services.Rules
     {
         private readonly List<string> _keywords;
 
-        public string RuleName => "Keyword Match Rule";
-
         public KeywordMatchRule(List<string> keywords)
         {
             _keywords = keywords;
         }
 
-        public int CalculateScore(string content)
+        public string RuleName => nameof(KeywordMatchRule);
+
+        public ScoringResult Evaluate(string content)
         {
-            int score = 0;
-            foreach (var keyword in _keywords)
+            var found = _keywords
+                .Where(k => content.Contains(k, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            return new ScoringResult
             {
-                if (Regex.IsMatch(content, $@"\b{keyword}\b", RegexOptions.IgnoreCase))
-                {
-                    score += 10;
-                }
-            }
-            return score;
+                RuleName = RuleName,
+                Score = found.Count * 10,
+                Matches = found
+            };
         }
     }
 }

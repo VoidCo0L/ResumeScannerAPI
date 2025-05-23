@@ -1,21 +1,26 @@
 ﻿using System.Text.RegularExpressions;
+using ResumeScannerAPI.Models;
 
 namespace ResumeScannerAPI.Services.Rules
 {
     public class ExperienceRule : IScoringRule
     {
-        public string RuleName => "Years of Experience Rule";
+        public string RuleName => nameof(ExperienceRule);
 
-        public int CalculateScore(string content)
+        public ScoringResult Evaluate(string content)
         {
-            //using Regex to find "X years" or "X+ years" patterns
-            var match = Regex.Match(content, @"(\d+)\s*(\+)?\s*years?", RegexOptions.IgnoreCase);
-            if (match.Success)
+            var matches = Regex.Matches(content, @"(\d+)\s*(\+)?\s*(years|yrs)", RegexOptions.IgnoreCase);
+            var yearsList = matches.Select(m => m.Value).ToList();
+
+            int totalYears = matches.Sum(m => int.Parse(m.Groups[1].Value));
+            int score = totalYears * 5;
+
+            return new ScoringResult
             {
-                int years = int.Parse(match.Groups[1].Value);
-                return years * 5; // 5 points per year
-            }
-            return 0;
+                RuleName = RuleName,
+                Score = score,
+                Matches = yearsList
+            };
         }
     }
 }
